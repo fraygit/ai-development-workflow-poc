@@ -1,0 +1,12 @@
+{
+  "name": "aidevflow-poc-webhook-bridge",
+  "version": "1.0.0",
+  "description": "Thin bridge: Jira webhook → GitHub Actions repository_dispatch",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
