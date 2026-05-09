@@ -90,10 +90,11 @@ jobs:
           JIRA_SUMMARY: ${{ steps.jira.outputs.summary }}
           JIRA_DESCRIPTION: ${{ steps.jira.outputs.description }}
         run: |
-          claude -p \
+          PROMPT=$(printf 'You are a senior Node.js developer. Implement the following Jira ticket in this repository.\n\nTicket ID: %s\nSummary: %s\nDescription: %s\n\nSteps:\n1. Read package.json, src/ and test/ to understand the project structure and conventions.\n2. Implement the requested change following the existing code style exactly.\n3. Write or update tests in test/ to cover the new behaviour.\n4. Run npm test — if tests fail, fix the implementation before committing.\n5. Stage and commit all changes: git add -A && git commit -m "feat(%s): <one-line description>"\n\nRules:\n- Only modify files directly relevant to the ticket.\n- Never commit node_modules/, .env, or any file listed in .gitignore.\n- Do not open a PR — the workflow handles that after your commit.' \
+            "$JIRA_TICKET_ID" "$JIRA_SUMMARY" "$JIRA_DESCRIPTION" "$JIRA_TICKET_ID")
+          claude -p "$PROMPT" \
             --dangerously-skip-permissions \
-            --allowedTools "Read" "Edit" "Write" "Bash" "Glob" "Grep" \
-            "$(cat ../poc/.claude/skills/nodejs-developer/SKILL.md)"
+            --allowedTools "Read" "Edit" "Write" "Bash" "Glob" "Grep"
 
       - name: Check for changes
         id: changes
