@@ -42,10 +42,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install sample app dependencies
-        working-directory: target
-        run: npm ci
-
       - name: Fetch Jira ticket
         id: jira
         env:
