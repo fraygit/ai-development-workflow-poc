@@ -100,7 +100,9 @@ jobs:
         id: changes
         working-directory: target
         run: |
-          if git diff --quiet && git diff --staged --quiet; then
+          COMMITS_AHEAD=$(git rev-list origin/main..HEAD --count 2>/dev/null || echo "0")
+          UNCOMMITTED=$(git diff --quiet && git diff --staged --quiet && echo "0" || echo "1")
+          if [ "$COMMITS_AHEAD" = "0" ] && [ "$UNCOMMITTED" = "0" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
@@ -109,7 +111,7 @@ jobs:
       - name: Fail if no changes made
         if: steps.changes.outputs.has_changes == 'false'
         run: |
-          echo "Claude made no file changes. Check the skill output above."
+          echo "Claude made no file changes or commits. Check the skill output above."
           exit 1
 
       - name: Push branch to sample app repo
