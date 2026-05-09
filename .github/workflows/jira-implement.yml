@@ -90,9 +90,10 @@ jobs:
           JIRA_SUMMARY: ${{ steps.jira.outputs.summary }}
           JIRA_DESCRIPTION: ${{ steps.jira.outputs.description }}
         run: |
-          claude --no-interactive \
-            --allowedTools "Read,Edit,Write,Bash,Glob,Grep" \
-            -p "$(cat ../poc/.claude/skills/nodejs-developer/SKILL.md)"
+          claude -p \
+            --dangerously-skip-permissions \
+            --allowedTools "Read" "Edit" "Write" "Bash" "Glob" "Grep" \
+            "$(cat ../poc/.claude/skills/nodejs-developer/SKILL.md)"
 
       - name: Check for changes
         id: changes
